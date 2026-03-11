@@ -1,36 +1,94 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Roberta Attard — Portfolio
 
-## Getting Started
+A self-hosted portfolio website built with **Next.js 15**, **TypeScript**, **Tailwind CSS**, and **Supabase**. Deployed on Vercel.
 
-First, run the development server:
+## Features
+
+- **Public site** — About, Work (project grid), CV pages
+- **Admin panel** at `/admin` — edit all content without touching code
+- **Password-protected** admin access via cookie
+- **Supabase** database for all content (about, projects, CV)
+
+## Setup
+
+### 1. Clone and install
+
+```bash
+git clone <your-repo-url>
+cd roberta-portfolio
+npm install
+```
+
+### 2. Create a Supabase project
+
+1. Go to [supabase.com](https://supabase.com) and create a new project
+2. Open the SQL editor and run the contents of `supabase/schema.sql`
+3. Copy your **Project URL** and **anon key** from Settings → API
+
+### 3. Configure environment variables
+
+Copy `.env.local` and fill in your values:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+ADMIN_PASSWORD=choose-a-secure-password
+```
+
+### 4. Run locally
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Portfolio: http://localhost:3000
+- Admin: http://localhost:3000/admin
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 5. Deploy to Vercel
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Push this repo to GitHub
+2. Import the repo in [vercel.com](https://vercel.com)
+3. Add the 3 environment variables in Vercel project settings
+4. Deploy
 
-## Learn More
+## Admin Panel
 
-To learn more about Next.js, take a look at the following resources:
+Go to `/admin/login` and enter your `ADMIN_PASSWORD`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Section  | What you can edit                      |
+| -------- | -------------------------------------- |
+| About    | Name, title, bio, photo URL, LinkedIn  |
+| Projects | Add/delete/reorder portfolio projects  |
+| CV       | Experience, education and skills items |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Adding project images
 
-## Deploy on Vercel
+For now the site uses image URLs. You can:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Upload images to Supabase Storage and paste the public URL
+- Use any image hosting (Cloudinary, Imgur, etc.)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+In the admin → Projects, paste the image URL when adding a project.
+
+## Project structure
+
+```
+src/
+├── app/
+│   ├── page.tsx          # About / home
+│   ├── work/page.tsx     # Portfolio grid
+│   ├── cv/page.tsx       # CV
+│   └── admin/            # Admin panel
+│       ├── page.tsx
+│       ├── about/
+│       ├── projects/
+│       └── cv/
+├── components/
+│   ├── Navbar.tsx
+│   └── AdminSidebar.tsx
+└── lib/
+    ├── supabase.ts
+    └── database.types.ts
+supabase/
+└── schema.sql            # Run this in Supabase SQL editor
+```
