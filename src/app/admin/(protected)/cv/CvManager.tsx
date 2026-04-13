@@ -75,6 +75,14 @@ function SectionEditor({
     onChange({ ...section, items: items.filter((_, i) => i !== index) });
   }
 
+  function moveItem(index: number, direction: -1 | 1) {
+    const target = index + direction;
+    if (target < 0 || target >= items.length) return;
+    const updated = [...items];
+    [updated[index], updated[target]] = [updated[target], updated[index]];
+    onChange({ ...section, items: updated });
+  }
+
   async function handleSave() {
     setSaving(true);
     await onSave();
@@ -89,7 +97,24 @@ function SectionEditor({
 
       <div className="space-y-6">
         {items.map((item, index) => (
-          <div key={index} className="border border-gray-100 p-4 relative">
+          <div key={index} className="border border-gray-100 p-4 relative flex gap-3">
+            <div className="flex flex-col gap-0.5 pt-6">
+              <button
+                onClick={() => moveItem(index, -1)}
+                disabled={index === 0}
+                className="text-gray-400 hover:text-gray-700 disabled:opacity-20 text-xs leading-none"
+              >
+                ▲
+              </button>
+              <button
+                onClick={() => moveItem(index, 1)}
+                disabled={index === items.length - 1}
+                className="text-gray-400 hover:text-gray-700 disabled:opacity-20 text-xs leading-none"
+              >
+                ▼
+              </button>
+            </div>
+            <div className="flex-1 min-w-0">
             <button
               onClick={() => removeItem(index)}
               className="absolute top-3 right-3 text-xs text-red-400 hover:text-red-600"
@@ -139,6 +164,7 @@ function SectionEditor({
                   className="w-full border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:border-[#1a2744] resize-none"
                 />
               )}
+            </div>
             </div>
           </div>
         ))}
